@@ -1,0 +1,29 @@
+.container *{
+    font-family: 'Quicksand', sans-serif;
+}
+
+.container{
+    width: 1400px;
+    margin: 0px auto;
+    padding: 20px;
+}
+
+.header{
+    font-size: 28px;
+    font-weight: 300;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.line{
+    width: 1400px;
+    height: 1px;
+    background-color: rgb(133, 133, 133);
+}
+
+.products{
+    width: 1400px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
