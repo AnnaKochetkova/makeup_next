@@ -2,36 +2,24 @@ import Product from "../components/product";
 import styles from '../styles/categories.module.css';
 import { useEffect } from "react";
 import productsStore from "../store/productsStore";
-import Loading from "../components/loading";
 import { observer } from "mobx-react-lite";
+import Loading from "../components/loading";
 
-interface IColors{
-    hex_value: string
-}
-
-export interface IBlush {
-    id: string;
-    api_featured_image: string,
-    brand: string,
-    category: string,
-    name: string,
-    price: string,
-    product_colors: IColors[]
-}
-
-const Blush = observer(() => {
+const Bronzer = observer(() => {
 
     useEffect(() => {
-        productsStore.fetchProducts('blush');
-
+        console.log(productsStore.loading, 'load до фетч')
+        productsStore.fetchProducts('bronzer');
+        console.log(productsStore.loading, 'load после фетч')
         return () => {
             productsStore.deleteProducts();
+            console.log(productsStore.loading, 'load в ретурн')
         }
     }, []);
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.header}>Blushes</h1>
+            <h1 className={styles.header}>Bronzer</h1>
             <div className={styles.line}/>
             {
                 productsStore.loading ? <Loading/> : (
@@ -47,10 +35,8 @@ const Blush = observer(() => {
                     </div>
                 )
             }
-            
-            
         </div>
     )
 })
 
-export default Blush;
+export default Bronzer;

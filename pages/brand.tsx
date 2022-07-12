@@ -1,43 +1,26 @@
-import Product from "../components/product";
-import styles from '../styles/categories.module.css';
-import { useEffect } from "react";
-import productsStore from "../store/productsStore";
-import Loading from "../components/loading";
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
+import Loading from "../components/loading";
+import Product from "../components/product";
+import productsStore from "../store/productsStore";
+import styles from '../styles/categories.module.css';
 
-interface IColors{
-    hex_value: string
-}
-
-export interface IBlush {
-    id: string;
-    api_featured_image: string,
-    brand: string,
-    category: string,
-    name: string,
-    price: string,
-    product_colors: IColors[]
-}
-
-const Blush = observer(() => {
-
+const Brand = observer(() => {
     useEffect(() => {
-        productsStore.fetchProducts('blush');
 
         return () => {
             productsStore.deleteProducts();
         }
     }, []);
-
     return (
         <div className={styles.container}>
-            <h1 className={styles.header}>Blushes</h1>
+            <h1 className={styles.header}>Brand: </h1>
             <div className={styles.line}/>
             {
                 productsStore.loading ? <Loading/> : (
                     <div className={styles.products}>
                         {
-                            productsStore.products.map(el => {
+                            productsStore.productsBrand.map(el => {
                                 return (
                                     <Product key={el.id} brand={el.brand} name={el.name} category={el.category} price={el.price} api_featured_image={el.api_featured_image} id={""} product_colors={el.product_colors}/>
                                 )
@@ -47,10 +30,8 @@ const Blush = observer(() => {
                     </div>
                 )
             }
-            
-            
         </div>
     )
 })
 
-export default Blush;
+export default Brand;

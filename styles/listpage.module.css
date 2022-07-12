@@ -4,6 +4,7 @@
 
 .container{
     width: 1400px;
+    height: 100%;
     margin: 0px auto;
     padding: 20px;
     display: flex;
@@ -24,9 +25,25 @@
     background-color: rgb(133, 133, 133);
 }
 
-.products{
+.listBrand{
     width: 1400px;
+    height: 600px;
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     flex-wrap: wrap;
     margin-top: 40px;
+}
+
+.brand{
+    height: 30px;
+    width: 250px;
+    list-style-type: none;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.brand:hover{
+    font-weight: 600;
 }
