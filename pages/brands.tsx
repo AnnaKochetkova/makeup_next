@@ -3,7 +3,7 @@ import Link from "next/link";
 import productsStore from "../store/productsStore";
 import styles from '../styles/listpage.module.css';
 
-const Brands = observer(() => {
+const Brands = () => {
     const brands: string[] = ['almay', 'alva', 'anna sui', 'annabelle', 'benefit', 'boosh', "burt's bees", 'butter london', "c'est moi", 'cargo cosmetics', 'china glaze', 
     'clinique', 'coastal classic creation', 'colourpop', 'covergirl', 'dalish', 'deciem', 'dior', 'dr. hauschka', 'e.l.f.', 'essie', 'fenty', 'glossier', 'green people',
     'iman', "l'oreal", 'lotus cosmetics usa', "maia's mineral galaxy", 'marcelle', 'marienatie', 'maybelline', 'milani', 'mineral fusion', 'misa', 'mistura', 
@@ -12,7 +12,6 @@ const Brands = observer(() => {
 
     const clickBrand = (brand: string) => {
         productsStore.fetchProductsByBrend(brand);
-        productsStore.saveBrand(brand);
     }
 
     return (
@@ -29,6 +28,6 @@ const Brands = observer(() => {
             </ul>
         </div>
     )
-})
+}
 
 export default Brands;

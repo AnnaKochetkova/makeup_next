@@ -23,8 +23,8 @@ const Layout = ({ children }: LayoutProps) => {
                     <div className={styles.navbar}>Categories
                         <ul className={styles.navbarMenu}>
                             {
-                                categories.map(el => {
-                                    return <li onClick={()=>clickBrand(el)} className={styles.menu}><Link href={`/${el}`}className={styles.link}>{el}</Link></li>
+                                categories.map((el, index) => {
+                                    return <li key={index} onClick={()=>clickBrand(el)} className={styles.menu}><Link href={`/${el}`}className={styles.link}>{el}</Link></li>
                                 })
                             }
                         </ul>

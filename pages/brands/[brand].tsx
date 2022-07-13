@@ -10,8 +10,6 @@ const Brand = observer(() => {
     const router = useRouter();
     const { brand } = router.query;
     useEffect(() => {
-        console.log(brand, 'productsStore.brand from brand')
-
         productsStore.fetchProductsByBrend(brand);
 
         return () => {

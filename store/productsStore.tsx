@@ -17,7 +17,6 @@ export interface IBlush {
 class ProductsStore {
     products: IBlush[] = [];
     productsBrand: IBlush[] = [];
-    brand: string | string[] | undefined = '';
     loading: boolean = true;
 
     constructor() {
@@ -32,9 +31,6 @@ class ProductsStore {
             this.products = result;
             this.loading = false;
         })
-        
-        
-        
     }
 
     async fetchProductsByBrend (brand: string | string[] | undefined) {
@@ -47,11 +43,6 @@ class ProductsStore {
         })
         
         
-    }
-
-    saveBrand(brand: string | string[] | undefined) {
-        this.brand = brand;
-        console.log(this.brand, 'this.brand')
     }
 
     deleteProducts() {
