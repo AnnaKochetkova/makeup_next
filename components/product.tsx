@@ -1,19 +1,16 @@
-import { IBlush } from '../pages/blush';
+import { IBlush } from '../store/productsStore';
 import styles from '../styles/product.module.css';
 
 const Product = ({brand, name, category, price, api_featured_image, product_colors}: IBlush) => {
     return (
         <div className={styles.container}>
             <div className={styles.containerImage}>
-                <img className={styles.image} src={api_featured_image} alt="" />
+                <img className={styles.image} src={api_featured_image} alt={name}/>
             </div>
             
             <div className={styles.text}>
                 <p className={styles.name}>{name}</p>
                 <p className={styles.brand}>{brand}</p>
-                {/* {
-                    category ? <p>Category: {category}</p> : null
-                } */}
                 <p className={styles.price}>$ {price}</p>
             </div>
 

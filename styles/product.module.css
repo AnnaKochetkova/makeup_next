@@ -5,11 +5,11 @@
 
 .container{
     width: 350px;
-    height: 450px;
+    min-height: 450px;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: flex-start;
     transition: all 0.5s ease;
 }
@@ -45,7 +45,7 @@
 }
 
 .colors{
-    height: 69px;
+    min-height: 69px;
     width: 260px;
     display: flex;
     flex-wrap: wrap;

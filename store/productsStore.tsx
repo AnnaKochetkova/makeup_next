@@ -17,13 +17,14 @@ export interface IBlush {
 class ProductsStore {
     products: IBlush[] = [];
     productsBrand: IBlush[] = [];
+    brand: string | string[] | undefined = '';
     loading: boolean = true;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    async fetchProducts (type: string) {
+    async fetchProducts (type: string | string[] | undefined) {
         const url = `http://makeup-api.herokuapp.com/api/v1/products.json?product_type=${type}`;
         const res = await fetch(url);
         const result = await res.json();
@@ -36,7 +37,7 @@ class ProductsStore {
         
     }
 
-    async fetchProductsByBrend (brand: string) {
+    async fetchProductsByBrend (brand: string | string[] | undefined) {
         const url = `http://makeup-api.herokuapp.com/api/v1/products.json?brand=${brand}`;
         const res = await fetch(url);
         const result = await res.json();
@@ -48,8 +49,13 @@ class ProductsStore {
         
     }
 
+    saveBrand(brand: string | string[] | undefined) {
+        this.brand = brand;
+        console.log(this.brand, 'this.brand')
+    }
+
     deleteProducts() {
-        this.products = [];
+        // this.products = [];
         // this.productsBrand = [];
         this.loading = true;
     }
