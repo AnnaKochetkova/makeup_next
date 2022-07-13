@@ -23,7 +23,7 @@ class ProductsStore {
         makeAutoObservable(this);
     }
 
-    async fetchProducts (type: string) {
+    async fetchProducts (type: string | string[] | undefined) {
         const url = `http://makeup-api.herokuapp.com/api/v1/products.json?product_type=${type}`;
         const res = await fetch(url);
         const result = await res.json();
@@ -31,12 +31,9 @@ class ProductsStore {
             this.products = result;
             this.loading = false;
         })
-        
-        
-        
     }
 
-    async fetchProductsByBrend (brand: string) {
+    async fetchProductsByBrend (brand: string | string[] | undefined) {
         const url = `http://makeup-api.herokuapp.com/api/v1/products.json?brand=${brand}`;
         const res = await fetch(url);
         const result = await res.json();
@@ -49,7 +46,7 @@ class ProductsStore {
     }
 
     deleteProducts() {
-        this.products = [];
+        // this.products = [];
         // this.productsBrand = [];
         this.loading = true;
     }
