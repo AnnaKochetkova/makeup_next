@@ -17,6 +17,7 @@ export interface IBlush {
 class ProductsStore {
     products: IBlush[] = [];
     productsBrand: IBlush[] = [];
+    productsTag: IBlush[] = [];
     loading: boolean = true;
 
     constructor() {
@@ -41,8 +42,17 @@ class ProductsStore {
             this.productsBrand = result;
             this.loading = false;
         })
-        
-        
+    }
+
+    async fetchProductsByTag (tag: string | string[] | undefined) {
+        const url = `http://makeup-api.herokuapp.com/api/v1/products.json?product_tags=${tag}`;
+        const res = await fetch(url);
+        const result = await res.json();
+        console.log(result, 'result from fetch')
+        runInAction(() => {
+            this.productsTag = result;
+            this.loading = false;
+        })
     }
 
     deleteProducts() {

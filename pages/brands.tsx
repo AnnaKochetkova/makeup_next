@@ -21,7 +21,11 @@ const Brands = () => {
             <ul className={styles.listBrand}>
                 {
                     brands.map((el, index) => {
-                        return <li key={index} className={styles.brand} onClick={()=>clickBrand(el)}><Link href={`/brands/${el}`}>{el}</Link></li>
+                        return (<li key={index} className={styles.brand} onClick={()=>clickBrand(el)}>
+                                    <Link href={`/brands/${el}`}>
+                                        {el}
+                                    </Link>
+                                </li>)
                     })
                 }
                 
