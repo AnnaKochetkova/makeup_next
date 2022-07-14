@@ -1,13 +1,27 @@
 import { observer } from "mobx-react-lite";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import productsStore from "../../store/productsStore";
+import { useEffect } from "react";
+import productsStore, { IInfoProduct } from "../../store/productsStore";
 import styles from '../../styles/productList.module.css';
 
-const Product = observer(() => {
+const Product = observer(() => {    
+    const {name, brand, description, api_featured_image, price, product_colors, product_link, tag_list} = productsStore.productInfo;
     const router = useRouter();
     const { product } = router.query;
-    const {name, brand, description, api_featured_image, price, product_colors, product_link, tag_list} = productsStore.productInfo;
+    // const {name, brand, description, api_featured_image, price, product_colors, product_link, tag_list} = product;
+    // console.log(props, 'props');
+    
+    useEffect(() => {
+        if(product){
+            productsStore.updateProduct(product);
+        }
+        
+        return () => {
+            productsStore.deleteProducts();
+        }
+    }, [product])
+
     return (
         <div className={styles.container}>
             <div className={styles.wrapperInfo}>
@@ -61,4 +75,10 @@ const Product = observer(() => {
     )
 })
 
+// export async function getServerSideProps({ query }) {
+//     const url = `http://makeup-api.herokuapp.com/api/v1/products/${query.product}.json`;
+//     const res = await fetch(url);
+//     const result = await res.json();
+//     return { props: { product: result } }
+// }
 export default Product;

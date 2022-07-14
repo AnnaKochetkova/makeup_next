@@ -7,7 +7,7 @@ interface IProductProps extends IInfoProduct{
     onClick: ()=>void
 }
 
-const Product = ({brand, name, price, api_featured_image, product_colors, id,category, onClick}: IProductProps) => {
+const ProductCard = ({brand, name, price, api_featured_image, product_colors, id,category, onClick}: IProductProps) => {
 
     const router = useRouter();
 
@@ -40,4 +40,4 @@ const Product = ({brand, name, price, api_featured_image, product_colors, id,cat
     )
 }
 
-export default Product;
+export default ProductCard;

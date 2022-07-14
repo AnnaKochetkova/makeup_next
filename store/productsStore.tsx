@@ -6,7 +6,7 @@ interface IColors{
 }
 
 export interface IInfoProduct {
-    id: string;
+    id: number;
     api_featured_image: string,
     brand: string,
     category: string,
@@ -21,7 +21,7 @@ export interface IInfoProduct {
 class ProductsStore {
     products: IInfoProduct[] = [];
     loading: boolean = true;
-    productInfo: IInfoProduct = {id: '', api_featured_image: '', brand: '', category: '', name: '', price: '', product_colors: [{hex_value: ''}] , description: '', tag_list: [''], product_link: ''};
+    productInfo: IInfoProduct = {id: 0, api_featured_image: '', brand: '', category: '', name: '', price: '', product_colors: [{hex_value: ''}] , description: '', tag_list: [''], product_link: ''};
 
     constructor() {
         makeAutoObservable(this);
@@ -39,6 +39,20 @@ class ProductsStore {
 
     saveProduct (product: IInfoProduct) {
         this.productInfo = product;
+    }
+
+    async updateProduct (id: string | string[] | undefined) {
+        const url = `http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
+        const res = await fetch(url);
+        const result = await res.json();
+        // console.log(result, 'result from fetch')
+        // const product = result.find((el: IInfoProduct) => el.id.toString() === id );
+        // console.log(id, 'id')
+        // console.log(product, 'product from fetch')
+        runInAction(() => {
+            this.productInfo = result;
+            this.loading = false;
+        })
     }
 
     deleteProducts() {

@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Loading from "../../components/loading";
-import Product from "../../components/product";
+import ProductCard from "../../components/productCard";
 import productsStore, { IInfoProduct } from "../../store/productsStore";
 import styles from '../../styles/categories.module.css';
 
@@ -32,7 +32,7 @@ const Tag = observer(() => {
                         {
                             productsStore.products.map(el => {
                                 return (
-                                    <Product
+                                    <ProductCard
                                         key={el.id}
                                         onClick={()=>clickProduct(el)}
                                         brand={el.brand}
