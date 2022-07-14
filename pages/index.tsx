@@ -9,10 +9,8 @@ import nail from '../public/nail.png';
 
 const Home: NextPage = () => {
 
-  const categories: string[] = ['Blush', 'Bronzer', 'Eyebrow', 'Eyeliner', 'Eyeshadow', 'Foundation', 'Lip liner', 'Lipstick', 'Mascara', 'Nail polish'];
-
   return (
-
+    
         <main className={styles.container}>
           <div className={styles.containerImage}>
               <div className={styles.wrapper}>
@@ -26,7 +24,6 @@ const Home: NextPage = () => {
               </div>
           </div>
         </main>
-
   )
 }
 

@@ -2,16 +2,20 @@ import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Loading from "../../components/loading";
-import Product from "../../components/product";
-import productsStore from "../../store/productsStore";
+import ProductCard from "../../components/productCard";
+import productsStore, { IInfoProduct } from "../../store/productsStore";
 import styles from '../../styles/categories.module.css';
 
 const Tag = observer(() => {
     const router = useRouter();
     const { tag } = router.query;
 
+    const clickProduct = (product: IInfoProduct) => {
+        productsStore.saveProduct(product);
+    }
+
     useEffect(() => {
-        productsStore.fetchProductsByTag(tag);
+        productsStore.fetchProducts(tag, 'product_tags');
 
         return () => {
             productsStore.deleteProducts();
@@ -26,10 +30,11 @@ const Tag = observer(() => {
                 productsStore.loading ? <Loading /> : (
                     <div className={styles.products}>
                         {
-                            productsStore.productsTag.map(el => {
+                            productsStore.products.map(el => {
                                 return (
-                                    <Product
+                                    <ProductCard
                                         key={el.id}
+                                        onClick={()=>clickProduct(el)}
                                         brand={el.brand}
                                         name={el.name} 
                                         category={el.category} 

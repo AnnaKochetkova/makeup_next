@@ -27,7 +27,7 @@
 
 .listBrand{
     width: 1400px;
-    height: 600px;
+    height: 570px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -38,7 +38,6 @@
 
 .brand{
     height: 30px;
-    width: 250px;
     list-style-type: none;
     text-transform: uppercase;
     cursor: pointer;

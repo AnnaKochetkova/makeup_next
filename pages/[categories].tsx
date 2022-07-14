@@ -2,16 +2,20 @@ import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Loading from "../components/loading";
-import Product from "../components/product";
-import productsStore from "../store/productsStore";
+import ProductCard from "../components/productCard";
+import productsStore, { IInfoProduct } from "../store/productsStore";
 import styles from '../styles/categories.module.css';
 
 const Categories = observer(() => {
     const router = useRouter();
     const { categories } = router.query;
 
+    const clickProduct = (product: IInfoProduct) => {
+        productsStore.saveProduct(product);
+    }
+
     useEffect(() => {
-        productsStore.fetchProducts(categories);
+        productsStore.fetchProducts(categories, 'product_type');
 
         return () => {
             productsStore.deleteProducts();
@@ -28,15 +32,10 @@ const Categories = observer(() => {
                         {
                             productsStore.products.map(el => {
                                 return (
-                                    <Product 
-                                        key={el.id} 
-                                        brand={el.brand} 
-                                        name={el.name} 
-                                        category={el.category} 
-                                        price={el.price} 
-                                        api_featured_image={el.api_featured_image} 
-                                        id={el.id} 
-                                        product_colors={el.product_colors}
+                                    <ProductCard 
+                                        key={el.id}
+                                        onClick={()=>clickProduct(el)}
+                                        {...el}
                                     />
                                 )
                             })
