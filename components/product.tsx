@@ -1,9 +1,22 @@
-import { IBlush } from '../store/productsStore';
+import productsStore from '../store/productsStore';
+import { IInfoProduct } from '../store/productsStore';
 import styles from '../styles/product.module.css';
+import { useRouter } from 'next/router';
 
-const Product = ({brand, name, category, price, api_featured_image, product_colors}: IBlush) => {
+interface IProductProps extends IInfoProduct{
+    onClick: ()=>void
+}
+
+const Product = ({brand, name, price, api_featured_image, product_colors, id,category, onClick}: IProductProps) => {
+
+    const router = useRouter();
+
+    const click = () => {
+        onClick()
+        router.push(`/product/${id}`);
+    }
     return (
-        <div className={styles.container}>
+        <div className={styles.container} onClick={click}>
             <div className={styles.containerImage}>
                 <img className={styles.image} src={api_featured_image} alt={name}/>
             </div>
@@ -18,7 +31,7 @@ const Product = ({brand, name, category, price, api_featured_image, product_colo
                 {
                     product_colors.map((el, index) => {
                         return (
-                            <span key={index} className={styles.color} style={{backgroundColor : `${el.hex_value}`, width: 20, height: 20}}/>
+                            <span key={index}  className={styles.color} style={{backgroundColor : `${el.hex_value}`, width: 20, height: 20}}/>
                         )
                     })
                 }

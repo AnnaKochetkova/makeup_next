@@ -8,7 +8,7 @@ const Tags = () => {
     'alcohol free', 'cruelty free', 'oil free', 'purpicks', 'silicone free', 'water free'];
 
     const clickTag = (tag: string) => {
-        productsStore.fetchProductsByTag(tag);
+        productsStore.fetchProducts(tag, 'product_tags');
     }
 
     return (

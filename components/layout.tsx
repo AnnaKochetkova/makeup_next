@@ -10,14 +10,16 @@ const Layout = ({ children }: LayoutProps) => {
     const categories: string[] = ['blush', 'bronzer', 'eyebrow', 'eyeliner', 'eyeshadow', 'foundation', 'lip_liner', 'lipstick', 'mascara', 'nail_polish'];
 
     const clickBrand = (categories: string) => {
-        productsStore.fetchProducts(categories);
+        productsStore.fetchProducts(categories, 'product_type');
     }
 
     return (
         <div className={styles.containerLayout}>
             <header className={styles.mainHeader}>
                 <div className={styles.header}>
-                    <Link href='/'>Makeup</Link>
+                    <Link href='/'>
+                        <a className={styles.linkHeader}>Make up</a>
+                    </Link>
                 </div>
                 <div className={styles.navbarContainer}>
                     <div className={styles.navbar}>Categories
@@ -25,8 +27,10 @@ const Layout = ({ children }: LayoutProps) => {
                             {
                                 categories.map((el, index) => {
                                     return (<li key={index} onClick={()=>clickBrand(el)} className={styles.menu}>
-                                                <Link href={`/${el}`}className={styles.link}>
-                                                    {el}
+                                                <Link  href={`/${el}`} >
+                                                    <a className={styles.link}>
+                                                        {el}
+                                                    </a>
                                                 </Link>
                                             </li>)
                                 })
@@ -34,10 +38,18 @@ const Layout = ({ children }: LayoutProps) => {
                         </ul>
                     </div>
                     <div className={styles.navbar}>
-                        <Link  href={`/brands`} >Brands</Link>
+                        <Link  href={`/brands`} >
+                            <a className={styles.navbarLink}> 
+                                Brands
+                            </a>
+                        </Link>
                     </div>
                     <div className={styles.navbar}>
-                        <Link  href={`/tags`} >Tags</Link>
+                        <Link  href={`/tags`} >
+                            <a className={styles.navbarLink}>
+                                Tags
+                            </a>    
+                        </Link>
                     </div>
                 </div>
             </header>

@@ -11,7 +11,7 @@ const Brands = () => {
     "sally b's skin yummies", 'salon perfect', 'sante', 'sinful colours', 'smashbox', 'stila', 'suncoat', 'w3llpeople', "wet n wild", 'zorah', 'zorah biocosmetiques'];
 
     const clickBrand = (brand: string) => {
-        productsStore.fetchProductsByBrend(brand);
+        productsStore.fetchProducts(brand, 'brand');
     }
 
     return (

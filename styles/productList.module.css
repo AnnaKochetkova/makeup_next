@@ -1,0 +1,147 @@
+.container *{
+    font-family: 'Quicksand', sans-serif;
+    margin: 0px;
+}
+
+.container{
+    width: 1400px;
+    height: 655px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.wrapperInfo{
+    width: 100%;
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    
+}
+
+.image{
+    width: 550px;
+    height: 400px;
+    object-fit: contain;
+    object-position: left;
+}
+
+.wrapperText{
+    width: 500px;
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.header{
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 32px;
+}
+
+.uppercase{
+    text-transform: uppercase;
+}
+
+.description{
+    width: 1100px;
+    height: 200px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    gap: 20px;
+}
+
+.descriptionText{
+    line-height:1.5em;
+}
+
+.colors{
+    min-height: 69px;
+    max-height: 150px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-self: flex-end;
+    gap: 15px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #1d1d1d #d1d1d1;
+}
+
+.colors::-webkit-scrollbar{
+    width: 10px;
+}
+
+.colors::-webkit-scrollbar-track{
+    background: #d1d1d1;
+    border-radius: 20px;
+}
+
+.colors::-webkit-scrollbar-thumb{
+    background-color: #1d1d1d;
+    border-radius: 20px;
+    border: 1px solid #e4e4e4;
+}
+
+.colorsWraper{
+    display: flex;
+    align-items: center;
+    
+}
+
+.color{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 3px;
+}
+
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: rgb(133, 133, 133);
+}
+
+.price{
+    font-size: 32px;
+}
+
+.link{
+    width: 150px;
+    height: 50px;
+    background-color: #1d1d1d;
+    color: white;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+}
+
+.link:hover{
+    background-color: #ffffff;
+    color: black;
+    transition: all 0.5s ease;
+}
+
+.listTags{
+    padding: 0px;
+    font-weight: 600;
+    display: flex;
+    gap: 10px;
+}
+
+.tag{
+    list-style-type: none;
+    font-weight: 400;
+}
+
+.tag:hover{
+    font-weight: 600;
+}

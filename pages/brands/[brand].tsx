@@ -3,14 +3,19 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Loading from "../../components/loading";
 import Product from "../../components/product";
-import productsStore from "../../store/productsStore";
+import productsStore, { IInfoProduct } from "../../store/productsStore";
 import styles from '../../styles/categories.module.css';
 
 const Brand = observer(() => {
     const router = useRouter();
     const { brand } = router.query;
+
+    const clickProduct = (product: IInfoProduct) => {
+        productsStore.saveProduct(product);
+    }
+
     useEffect(() => {
-        productsStore.fetchProductsByBrend(brand);
+        productsStore.fetchProducts(brand, 'brand');
 
         return () => {
             productsStore.deleteProducts();
@@ -24,10 +29,11 @@ const Brand = observer(() => {
                 productsStore.loading ? <Loading /> : (
                     <div className={styles.products}>
                         {
-                            productsStore.productsBrand.map(el => {
+                            productsStore.products.map(el => {
                                 return (
                                     <Product
                                         key={el.id}
+                                        onClick={()=>clickProduct(el)}
                                         brand={el.brand}
                                         name={el.name} 
                                         category={el.category} 
