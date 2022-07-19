@@ -1,6 +1,6 @@
 import { runInAction, makeAutoObservable} from "mobx";
 
-interface IColors{
+export interface IColors{
     hex_value: string,
     colour_name?: string,
 }
@@ -18,11 +18,16 @@ export interface IInfoProduct {
     product_link?: string,
 }
 
-class ProductsStore {
-    products: IInfoProduct[] = [];
-    loading: boolean = true;
-    productInfo: IInfoProduct = {id: 0, api_featured_image: '', brand: '', category: '', name: '', price: '', product_colors: [{hex_value: ''}] , description: '', tag_list: [''], product_link: ''};
+interface IData{
+    products: IInfoProduct[],
+    loading: boolean,
+    productInfo: IInfoProduct
+}
 
+class ProductsStore {
+    products: IInfoProduct[] | null = [];
+    loading: boolean = true;
+    productInfo: IInfoProduct | null = null;
     constructor() {
         makeAutoObservable(this);
     }
@@ -45,21 +50,43 @@ class ProductsStore {
         const url = `http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
         const res = await fetch(url);
         const result = await res.json();
-        // console.log(result, 'result from fetch')
-        // const product = result.find((el: IInfoProduct) => el.id.toString() === id );
-        // console.log(id, 'id')
-        // console.log(product, 'product from fetch')
         runInAction(() => {
             this.productInfo = result;
             this.loading = false;
         })
     }
 
+    hydrate (data: Partial<IData> | null) {
+        console.log(data, 'data hydrate');
+        
+        if(!data) return;
+        this.products = data.products || null; //data.products !== null ? data.products : null;
+        this.loading = !!data.loading;
+        this.productInfo = data.productInfo || null; //data.productInfo !== null ? data.productInfo : null;
+        console.log(this, 'this hydrate');
+        
+    }
+
     deleteProducts() {
         // this.products = [];
         // this.productsBrand = [];
+        // this.hydrate({loading: true})
         this.loading = true;
     }
 }
 
-export default new ProductsStore;
+const store = new ProductsStore;
+
+
+export function initializeStore(initialData = null) {
+    // const _store = new ProductsStore()
+  
+    // If your page has Next.js data fetching methods that use a Mobx store, it will
+    // get hydrated here, check `pages/ssg.js` and `pages/ssr.js` for more details
+    if (initialData) {
+      store.hydrate(initialData)
+    }
+    // For SSG and SSR always create a new store
+    
+  }
+export default store;

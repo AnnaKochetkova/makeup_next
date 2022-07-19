@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite";
 import Link from "next/link";
 import productsStore from "../store/productsStore";
 import styles from '../styles/listpage.module.css';
