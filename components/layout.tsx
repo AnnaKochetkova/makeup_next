@@ -1,17 +1,26 @@
 import styles from '../styles/Home.module.css';
 import productsStore from '../store/productsStore';
 import Link from 'next/link';
+import storeSettings from '../store/settingsStore';
+import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import { GetServerSideProps } from 'next';
+import api from '../utils/api';
 
 interface LayoutProps {
     children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
-    const categories: string[] = ['blush', 'bronzer', 'eyebrow', 'eyeliner', 'eyeshadow', 'foundation', 'lip_liner', 'lipstick', 'mascara', 'nail_polish'];
+const Layout = observer(({ children }: LayoutProps) => {
+    // const categories: string[] = ['blush', 'bronzer', 'eyebrow', 'eyeliner', 'eyeshadow', 'foundation', 'lip_liner', 'lipstick', 'mascara', 'nail_polish'];
 
     const clickBrand = (categories: string) => {
         productsStore.fetchProducts(categories, 'product_type');
     }
+
+    useEffect(() => {
+        storeSettings.getProductType();
+    }, [])
 
     return (
         <div className={styles.containerLayout}>
@@ -25,11 +34,11 @@ const Layout = ({ children }: LayoutProps) => {
                     <div className={styles.navbar}>Categories
                         <ul className={styles.navbarMenu}>
                             {
-                                categories.map((el, index) => {
-                                    return (<li key={index} onClick={()=>clickBrand(el)} className={styles.menu}>
-                                                <Link  href={`/${el}`} >
+                                storeSettings.productType?.map((el, index) => {
+                                    return (<li key={index} onClick={()=>clickBrand(el.name)} className={styles.menu}>
+                                                <Link  href={`/${el.name}`} >
                                                     <a className={styles.link}>
-                                                        {el}
+                                                        {el.name}
                                                     </a>
                                                 </Link>
                                             </li>)
@@ -56,6 +65,6 @@ const Layout = ({ children }: LayoutProps) => {
             {children}
         </div>
     )
-}
+})
 
 export default Layout;

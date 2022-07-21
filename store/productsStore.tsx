@@ -57,14 +57,16 @@ class ProductsStore {
     }
 
     hydrate (data: Partial<IData> | null) {
-        console.log(data, 'data hydrate');
-        
         if(!data) return;
-        this.products = data.products || null; //data.products !== null ? data.products : null;
-        this.loading = !!data.loading;
-        this.productInfo = data.productInfo || null; //data.productInfo !== null ? data.productInfo : null;
-        console.log(this, 'this hydrate');
-        
+        if (data.products) {
+          this.products = data.products || null;
+        }
+        if (!!data.loading) {
+            this.loading = !!data.loading;
+        }
+        if (data.productInfo) {
+            this.productInfo = data.productInfo || null;
+        }
     }
 
     deleteProducts() {
@@ -83,10 +85,10 @@ export function initializeStore(initialData = null) {
   
     // If your page has Next.js data fetching methods that use a Mobx store, it will
     // get hydrated here, check `pages/ssg.js` and `pages/ssr.js` for more details
-    if (initialData) {
+    if (initialData !== null && initialData !== undefined) {
       store.hydrate(initialData)
     }
     // For SSG and SSR always create a new store
     
-  }
+}
 export default store;

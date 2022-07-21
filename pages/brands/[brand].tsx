@@ -14,7 +14,8 @@ const Brand = observer(({brand}: any) => {
     }
 
     useEffect(() => {
-        store.fetchProducts(brand, 'brand');        
+        store.fetchProducts(brand, 'brand'); 
+             
 
         return () => {
             store.deleteProducts();

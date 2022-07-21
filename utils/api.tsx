@@ -37,11 +37,29 @@ const getInfoByProduct = async(id: string | string[] | undefined):Promise<IInfoP
         return checkResponse(res);
 }
 
+const getTagList = async() => {
+    const res = await fetch(`https://3249-109-68-112-5.eu.ngrok.io/api/v1/tag?limit=100`);
+    return checkResponse(res);
+}
+
+const getBrands = async() => {
+    const res = await fetch(`https://3249-109-68-112-5.eu.ngrok.io/api/v1/brand?limit=100`);
+    return checkResponse(res);
+}
+
+const getProductType = async() => {
+    const res = await fetch(`https://3249-109-68-112-5.eu.ngrok.io/api/v1/product_type?limit=100`);
+    return checkResponse(res);
+}
+
 const api = {
     getProductsByBrand,
     getProductsByCategories,
     getProductsByTags,
-    getInfoByProduct
+    getInfoByProduct,
+    getTagList,
+    getProductType,
+    getBrands
 }
 
 export default api;
