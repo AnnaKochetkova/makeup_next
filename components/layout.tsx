@@ -6,22 +6,21 @@ import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { GetServerSideProps } from 'next';
 import api from '../utils/api';
+import { mainGetServerSideProps } from '../pages/_app';
 
 interface LayoutProps {
     children: React.ReactNode;
 }
 
 const Layout = observer(({ children }: LayoutProps) => {
-    // const categories: string[] = ['blush', 'bronzer', 'eyebrow', 'eyeliner', 'eyeshadow', 'foundation', 'lip_liner', 'lipstick', 'mascara', 'nail_polish'];
 
-    const clickBrand = (categories: string) => {
-        productsStore.fetchProducts(categories, 'product_type');
-    }
+    // const clickBrand = (categories: string) => {
+    //     productsStore.fetchProducts(categories, 'product_type');
+    // }
 
-    useEffect(() => {
-        storeSettings.getProductType();
-    }, [])
-
+    // console.log('storeSettings.productType', storeSettings.productType?.length);
+    console.log(storeSettings.productType, 'storeSettings.productType');
+    
     return (
         <div className={styles.containerLayout}>
             <header className={styles.mainHeader}>
@@ -35,7 +34,7 @@ const Layout = observer(({ children }: LayoutProps) => {
                         <ul className={styles.navbarMenu}>
                             {
                                 storeSettings.productType?.map((el, index) => {
-                                    return (<li key={index} onClick={()=>clickBrand(el.name)} className={styles.menu}>
+                                    return (<li key={index} className={styles.menu}>
                                                 <Link  href={`/${el.name}`} >
                                                     <a className={styles.link}>
                                                         {el.name}
@@ -67,4 +66,11 @@ const Layout = observer(({ children }: LayoutProps) => {
     )
 })
 
+
+
 export default Layout;
+
+export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
+    const mainProps = await mainGetServerSideProps();
+    return { props: {...mainProps } }
+}

@@ -1,29 +1,30 @@
 import productsStore from '../store/productsStore';
-import { IInfoProduct } from '../store/productsStore';
 import styles from '../styles/product.module.css';
 import { useRouter } from 'next/router';
+import { IProduct } from '../utils/types';
 
-interface IProductProps extends IInfoProduct{
+interface IProductProps extends IProduct{
     onClick: ()=>void
 }
 
-const ProductCard = ({brand, name, price, api_featured_image, product_colors, id,category, onClick}: IProductProps) => {
+const ProductCard = ({brand, name, price, image_link, product_colors, _id,category, onClick}: IProductProps) => {
 
     const router = useRouter();
 
     const click = () => {
         onClick()
-        router.push(`/product/${id}`);
-    }
+        router.push(`/product/${_id}`);
+    }    
+    
     return (
         <div className={styles.container} onClick={click}>
             <div className={styles.containerImage}>
-                <img className={styles.image} src={api_featured_image} alt={name}/>
+                <img className={styles.image} src={image_link} alt={name}/>
             </div>
             
             <div className={styles.text}>
                 <p className={styles.name}>{name}</p>
-                <p className={styles.brand}>{brand}</p>
+                <p className={styles.brand}>{brand.name}</p>
                 <p className={styles.price}>$ {price}</p>
             </div>
 

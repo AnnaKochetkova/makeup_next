@@ -6,17 +6,14 @@ import productsStore from "../store/productsStore";
 import storeSettings from "../store/settingsStore";
 import styles from '../styles/listpage.module.css';
 import api from "../utils/api";
+import { mainGetServerSideProps } from "./_app";
 
 const Brands = observer(() => {
 
-    const clickBrand = (brand: string) => {
-        productsStore.fetchProducts(brand, 'brand');
-    }
-
-    useEffect(() => {
-        storeSettings.getBrands();
-    }, [])
-
+    // const clickBrand = (brand: string) => {
+    //     productsStore.fetchProducts(brand, 'brand');
+    // }
+    
     return (
         <div className={styles.container}>
             <h1 className={styles.header}>Brands:</h1>
@@ -25,11 +22,11 @@ const Brands = observer(() => {
                 {
                     
                     storeSettings.brands?.map((el, index) => {
-                        return (<li key={index} className={styles.brand} onClick={()=>clickBrand(el.name)}>
+                            return (<li key={index} className={styles.brand} >
                                     <Link href={`/brands/${el.name}`}>
                                         <a>{el.name}</a>
                                     </Link>
-                                </li>)
+                                    </li>)
                     })
                     
                 }
@@ -41,7 +38,7 @@ const Brands = observer(() => {
 
 export default Brands;
 
-export  const getServerSideProps: GetServerSideProps = async (context) =>  {
-    const result = await api.getBrands()
-    return { props: { products: result} }
+export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
+    const mainProps = await mainGetServerSideProps();
+    return { props: {...mainProps } }
 }

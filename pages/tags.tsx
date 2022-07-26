@@ -6,19 +6,13 @@ import productsStore from '../store/productsStore';
 import storeSettings from '../store/settingsStore';
 import styles from '../styles/listpage.module.css';
 import api from '../utils/api';
+import { mainGetServerSideProps } from './_app';
 
 const Tags = observer(() => {
-    // const tags: string[] = ['Canadian', 'CertClean', 'Chemical Free', 'Dairy Free', 'EWG Verified', 'EcoCert', 'Fair Trade', 'Gluten Free',
-    // 'Hypoallergenic', 'Natural', 'No Talc', 'Non-GMO', 'Organic', 'Peanut Free Product', 'Sugar Free', 'USDA Organic', 'Vegan',
-    // 'alcohol free', 'cruelty free', 'oil free', 'purpicks', 'silicone free', 'water free'];
 
     const clickTag = (tag: string) => {
         productsStore.fetchProducts(tag, 'product_tags');
     }
-
-    useEffect(() => {
-        storeSettings.getTagList();
-    }, [])
 
     return (
         <div className={styles.container}>
@@ -42,7 +36,7 @@ const Tags = observer(() => {
 
 export default Tags;
 
-export  const getServerSideProps: GetServerSideProps = async (context) =>  {
-    const result = await api.getTagList()
-    return { props: { products: result} }
+export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
+    const mainProps = await mainGetServerSideProps();
+    return { props: {...mainProps } }
 }

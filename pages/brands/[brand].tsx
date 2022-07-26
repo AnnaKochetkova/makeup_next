@@ -3,27 +3,30 @@ import { GetServerSideProps } from "next";
 import { useEffect } from "react";
 import Loading from "../../components/loading";
 import ProductCard from "../../components/productCard";
-import store, { IInfoProduct } from "../../store/productsStore";
+import store from "../../store/productsStore";
+import storeSettings from "../../store/settingsStore";
 import styles from '../../styles/categories.module.css';
 import api from "../../utils/api";
+import client_api from "../../utils/client_api";
+import { factoryProduct } from "../../utils/factoryProduct";
+import { IProduct, ISettings } from "../../utils/types";
 
 const Brand = observer(({brand}: any) => {
 
-    const clickProduct = (product: IInfoProduct) => {
+    const clickProduct = (product: IProduct) => {
         store.saveProduct(product);
     }
 
     useEffect(() => {
-        store.fetchProducts(brand, 'brand'); 
+        store.fetchProductsByBrand(brand._id)
              
-
         return () => {
             store.deleteProducts();
         }
     }, [brand]);
     return (
         <div className={styles.container}>
-            <h1 className={styles.header}>Brand: {brand}</h1>
+            <h1 className={styles.header}>Brand: {brand.name}</h1>
             <div className={styles.line} />
             {
                 store.loading ? <Loading /> : (
@@ -32,14 +35,14 @@ const Brand = observer(({brand}: any) => {
                             store.products?.map(el => {
                                 return (
                                     <ProductCard
-                                        key={el.id}
+                                        key={el._id}
                                         onClick={()=>clickProduct(el)}
                                         brand={el.brand}
                                         name={el.name} 
                                         category={el.category} 
                                         price={el.price} 
-                                        api_featured_image={el.api_featured_image} 
-                                        id={el.id} 
+                                        image_link={el.image_link} 
+                                        _id={el._id} 
                                         product_colors={el.product_colors} 
                                     />
                                 )
@@ -53,9 +56,13 @@ const Brand = observer(({brand}: any) => {
     )
 })
 
-export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
-    const result = await api.getProductsByBrand(query.brand)
-    return { props: { products: result, brand:  query.brand} }
+export  const getServerSideProps = async ({ query }: any) =>  {
+    const currentBrand = await client_api.brandByName(query.brand)
+    if(currentBrand.length === 1){
+        const result = (await client_api.productByBrand(currentBrand[0]._id)).map(el => factoryProduct(el))
+        return { props: { brand: currentBrand[0], result: result} }
+    }
+    return {props: {}}
 }
 
 export default Brand;

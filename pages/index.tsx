@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import styles from '../styles/Home.module.css';
 import Image from 'next/image';
 import eyes from '../public/eyes.png';
@@ -6,6 +6,7 @@ import brushes from '../public/brushes.png';
 import blush from '../public/blush.png';
 import lipstick from '../public/lipstick.png';
 import nail from '../public/nail.png';
+import { mainGetServerSideProps } from './_app';
 
 const Home: NextPage = () => {
 
@@ -28,3 +29,8 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
+  const mainProps = await mainGetServerSideProps();
+  return { props: {...mainProps } }
+}
