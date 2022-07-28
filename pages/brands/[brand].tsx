@@ -1,38 +1,72 @@
 import { observer } from "mobx-react-lite";
 import { GetServerSideProps } from "next";
-import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useRef } from "react";
 import Loading from "../../components/loading";
 import ProductCard from "../../components/productCard";
-import store from "../../store/productsStore";
+import store, { useStoreProduct } from "../../store/productsStore";
 import storeSettings from "../../store/settingsStore";
 import styles from '../../styles/categories.module.css';
 import api from "../../utils/api";
 import client_api from "../../utils/client_api";
 import { factoryProduct } from "../../utils/factoryProduct";
 import { IProduct, ISettings } from "../../utils/types";
+import useWrapperStore from "../../utils/useWrapperStore";
+import { mainGetServerSideProps } from "../_app";
+
+// const useFirstRender = (cb, reCb) => {
+//     const count = useRef(true);
+//     useEffect(() => {
+//         if (count.current) {
+//             cb();
+//             count.current = false;
+//         }
+//         return () => {
+//             if (count.current = false) {
+//                 reCb()
+//             }
+//         }
+//     }, [cb, reCb])
+// }
 
 const Brand = observer(({brand}: any) => {
-
+    const ustore = useStoreProduct();
+    const router = useRouter()
+    const { query } = router
     const clickProduct = (product: IProduct) => {
-        store.saveProduct(product);
+        // ustore.saveProduct(product);
     }
 
-    useEffect(() => {
-        store.fetchProductsByBrand(brand._id)
+    const taskStore = useCallback((item: any) => {
+        store.fetchProductsByBrand(item._id);
+    }, []);
+
+    const taskFind = useCallback((name: string) => {
+        return  storeSettings.brands?.find(el => el.name === name);
+    }, []);
+
+    useWrapperStore('brand', brand.name, taskStore, taskFind);
+   
+    // useFirstRender(() => store.fetchProductsByBrand(brand._id), store.deleteProducts);
+    // useEffect(() => {
+    //     ustore.fetchProductsByBrand(brand._id)
+    //     console.log('useEffect fetch product mount');
+        
              
-        return () => {
-            store.deleteProducts();
-        }
-    }, [brand]);
+    //     return () => {
+    //         console.log('useEffect fetch product unmount');
+    //         ustore.deleteProducts();
+    //     }
+    // }, [ustore]);
     return (
         <div className={styles.container}>
-            <h1 className={styles.header}>Brand: {brand.name}</h1>
+            <h1 className={styles.header}>Brand: {query.brand}</h1>
             <div className={styles.line} />
             {
-                store.loading ? <Loading /> : (
+                ustore.loading ? <Loading /> : (
                     <div className={styles.products}>
                         {
-                            store.products?.map(el => {
+                            ustore.products?.map(el => {
                                 return (
                                     <ProductCard
                                         key={el._id}
@@ -57,10 +91,11 @@ const Brand = observer(({brand}: any) => {
 })
 
 export  const getServerSideProps = async ({ query }: any) =>  {
+    const mainProps = await mainGetServerSideProps();
     const currentBrand = await client_api.brandByName(query.brand)
     if(currentBrand.length === 1){
         const result = (await client_api.productByBrand(currentBrand[0]._id)).map(el => factoryProduct(el))
-        return { props: { brand: currentBrand[0], result: result} }
+        return { props: { ...mainProps, brand: currentBrand[0], products: result} }
     }
     return {props: {}}
 }

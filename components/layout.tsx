@@ -35,7 +35,13 @@ const Layout = observer(({ children }: LayoutProps) => {
                             {
                                 storeSettings.productType?.map((el, index) => {
                                     return (<li key={index} className={styles.menu}>
-                                                <Link  href={`/${el.name}`} >
+                                                <Link 
+                                                      href={{
+                                                        pathname: `/[categories]`,
+                                                        query: { categories: el.name },
+                                                      }}
+                                                      shallow
+                                                >
                                                     <a className={styles.link}>
                                                         {el.name}
                                                     </a>
@@ -70,7 +76,3 @@ const Layout = observer(({ children }: LayoutProps) => {
 
 export default Layout;
 
-export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
-    const mainProps = await mainGetServerSideProps();
-    return { props: {...mainProps } }
-}

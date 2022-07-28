@@ -1,7 +1,11 @@
-import { runInAction, makeAutoObservable} from "mobx";
+import { action, runInAction, makeObservable, observable} from "mobx";
+import { useRef } from "react";
 import client_api from "../utils/client_api";
 import { factoryProduct } from "../utils/factoryProduct";
 import { IProduct } from "../utils/types";
+import { enableStaticRendering } from 'mobx-react-lite'
+
+enableStaticRendering(typeof window === 'undefined');
 
 interface IData{
     products: IProduct[],
@@ -11,23 +15,36 @@ interface IData{
 
 class ProductsStore {
     products: IProduct[] | null = [];
-    loading: boolean = true;
+    loading: boolean = false;
     productInfo: IProduct | null = null;
     constructor() {
-        makeAutoObservable(this);
+        makeObservable(this, {
+            products: observable,
+            productInfo: observable,
+            loading: observable,
+            fetchProductsByBrand: action,
+            fetchProductsByTag: action,
+            fetchProductsByType: action,
+            fetchProduct: action,
+            saveProduct: action,
+            hydrate: action,
+            deleteProducts: action,
+        });
+        console.log('constructor product store');
+        
     }
 
-    async fetchProductsByBrand (brand: string) {
-        //@ts-ignore
+    fetchProductsByBrand = async (brand: string) => {
+        console.log('fetchProductsByBrand', this);
         const result = (await client_api.productByBrand(brand)).map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
             this.loading = false;
         })
+
     }
 
     async fetchProductsByTag (tag: string) {
-        //@ts-ignore
         const result = (await client_api.productByTag(tag)).map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
@@ -36,7 +53,7 @@ class ProductsStore {
     }
 
     async fetchProductsByType (type: string) {
-        //@ts-ignore
+        this.loading = true;
         const result = (await client_api.productByProductType(type)).map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
@@ -45,7 +62,6 @@ class ProductsStore {
     }
 
     async fetchProduct (id: string) {
-        //@ts-ignore
         const result = (await client_api.productById(id));
         runInAction(() => {
             this.productInfo = result[0];
@@ -70,12 +86,17 @@ class ProductsStore {
         }
     }
 
-    deleteProducts() {
+    deleteProducts = () => {
         this.loading = true;
     }
 }
 
 const store = new ProductsStore;
+
+export const useStoreProduct = () => {
+    const refStore = useRef(store);
+    return refStore.current;
+}
 
 
 export function initializeStore(initialData = null) {

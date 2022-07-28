@@ -3,7 +3,7 @@
 }
 
 .container{
-  height: 735px;
+  height: 737px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,15 +142,8 @@
 .containerImage{
   margin: auto;
   display: flex;
-  width: 1200px;
-  height: 536px;
-  justify-content: space-between;
-}
-
-.wrapper{
-  width: 395px;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
   justify-content: space-between;
 }
 

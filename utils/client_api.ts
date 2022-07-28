@@ -17,11 +17,9 @@ const client_api = {
     productById: (id: string):Promise<[IProduct]> => makeRequest(`/product?limit=1&filters={"_id":"${id}"}`)
 }
 
-export const factoryBaseModal = <T = ISettings>(doc: ISettings): T => {
-    return {
-        _id: doc._id,
-        name: doc.name && doc.name !== "" ? doc.name: "-",
-    } as T;
-}
+export const factoryBaseModal = <T = ISettings>(doc: ISettings): T => ({
+    _id: doc._id,
+    name: doc.name && doc.name !== "" ? doc.name: "-",
+})as T
 
 export default client_api;

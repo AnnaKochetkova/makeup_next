@@ -10,9 +10,9 @@ import { mainGetServerSideProps } from './_app';
 
 const Tags = observer(() => {
 
-    const clickTag = (tag: string) => {
-        productsStore.fetchProducts(tag, 'product_tags');
-    }
+    // const clickTag = (tag: string) => {
+    //     productsStore.fetchProducts(tag, 'product_tags');
+    // }
 
     return (
         <div className={styles.container}>
@@ -21,7 +21,7 @@ const Tags = observer(() => {
             <ul className={styles.listBrand}>
                 {
                     storeSettings.tagsList?.map((el, index) => {
-                        return (<li key={index} className={styles.brand} onClick={()=>clickTag(el.name)}>
+                        return (<li key={index} className={styles.brand} >
                                     <Link href={`/tags/${el.name}`}>
                                         {el.name}
                                     </Link>

@@ -6,13 +6,19 @@ import { initializeStore } from '../store/productsStore';
 import { initializeStoreSettings } from '../store/settingsStore';
 import client_api, { factoryBaseModal } from '../utils/client_api';
 import { GetServerSideProps } from 'next';
+import { ISettings } from '../utils/types';
+
+interface PropsInitStore {
+  children: JSX.Element;
+  initialState: any;
+}
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     initializeStore(pageProps);
     initializeStoreSettings(pageProps);
-    
-  }, [pageProps])
+  }, [pageProps]);
   return (
       <Layout {...pageProps}>
         <Component {...pageProps} />
@@ -22,8 +28,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 export default MyApp
 
-const wrapper = async (request) => {
-  return (await request()).map((el) => factoryBaseModal(el)) 
+const wrapper = async (request: () => Promise<ISettings[]>) => {
+  return (await request()).map((el: ISettings) => factoryBaseModal(el)) 
 }
 
 export const mainGetServerSideProps = async () => {
