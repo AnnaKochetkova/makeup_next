@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import { initializeStore } from '../store/productsStore';
 import { initializeStoreSettings } from '../store/settingsStore';
 import client_api, { factoryBaseModal } from '../utils/client_api';
-import { GetServerSideProps } from 'next';
 import { ISettings } from '../utils/types';
 
 interface PropsInitStore {

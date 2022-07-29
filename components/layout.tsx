@@ -1,31 +1,19 @@
 import styles from '../styles/Home.module.css';
-import productsStore from '../store/productsStore';
 import Link from 'next/link';
 import storeSettings from '../store/settingsStore';
-import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { GetServerSideProps } from 'next';
-import api from '../utils/api';
-import { mainGetServerSideProps } from '../pages/_app';
 
 interface LayoutProps {
     children: React.ReactNode;
 }
 
 const Layout = observer(({ children }: LayoutProps) => {
-
-    // const clickBrand = (categories: string) => {
-    //     productsStore.fetchProducts(categories, 'product_type');
-    // }
-
-    // console.log('storeSettings.productType', storeSettings.productType?.length);
-    console.log(storeSettings.productType, 'storeSettings.productType');
     
     return (
         <div className={styles.containerLayout}>
             <header className={styles.mainHeader}>
                 <div className={styles.header}>
-                    <Link href='/'>
+                    <Link href='/' shallow>
                         <a className={styles.linkHeader}>Make up</a>
                     </Link>
                 </div>
@@ -33,8 +21,8 @@ const Layout = observer(({ children }: LayoutProps) => {
                     <div className={styles.navbar}>Categories
                         <ul className={styles.navbarMenu}>
                             {
-                                storeSettings.productType?.map((el, index) => {
-                                    return (<li key={index} className={styles.menu}>
+                                storeSettings.productType?.map((el) => {
+                                    return (<li key={el._id} className={styles.menu}>
                                                 <Link 
                                                       href={{
                                                         pathname: `/[categories]`,
@@ -52,14 +40,14 @@ const Layout = observer(({ children }: LayoutProps) => {
                         </ul>
                     </div>
                     <div className={styles.navbar}>
-                        <Link  href={`/brands`} >
+                        <Link  href={`/brands`} shallow>
                             <a className={styles.navbarLink}> 
                                 Brands
                             </a>
                         </Link>
                     </div>
                     <div className={styles.navbar}>
-                        <Link  href={`/tags`} >
+                        <Link  href={`/tags`} shallow>
                             <a className={styles.navbarLink}>
                                 Tags
                             </a>    

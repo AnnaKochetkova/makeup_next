@@ -1,23 +1,18 @@
 import { observer } from "mobx-react-lite";
-import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useEffect } from "react";
 import store from "../../store/productsStore";
 import styles from '../../styles/productList.module.css';
-import api from "../../utils/api";
 import client_api from "../../utils/client_api";
 import { factoryProduct } from "../../utils/factoryProduct";
 import { IColors } from "../../utils/types";
 
-const Product = observer(({ product }: any) => {    
+const Product = observer(({ productInfo }: any) => {    
     
     useEffect(() => {
-        store.fetchProduct(product._id);
+        store.fetchProduct(productInfo._id);
 
-        return () => {
-            store.deleteProducts();
-        }
-    }, [product])
+    }, [productInfo])
 
     return (
         <div className={styles.container}>
@@ -58,7 +53,13 @@ const Product = observer(({ product }: any) => {
                         store.productInfo?.tag_list?.map((el, index) => {
                             return (
                                 <li className={styles.tag} key={index}>
-                                    <Link href={`/tags/${el.name}`}>
+                                    <Link 
+                                        href={{
+                                            pathname: `/tags/[tag]`,
+                                            query: { tag: el.name },
+                                        }}
+                                        shallow
+                                    >
                                         <a>{el.name}</a>
                                     </Link>
                                 </li>
@@ -74,6 +75,6 @@ const Product = observer(({ product }: any) => {
 
 export  const getServerSideProps = async ({ query }: any) =>  {
     const result = (await client_api.productById(query.product)).map(el => factoryProduct(el))        
-    return { props: { product: result[0]} }
+    return { props: { productInfo: result[0]} }
 }
 export default Product;

@@ -1,18 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import productsStore from '../store/productsStore';
 import storeSettings from '../store/settingsStore';
 import styles from '../styles/listpage.module.css';
-import api from '../utils/api';
 import { mainGetServerSideProps } from './_app';
 
 const Tags = observer(() => {
-
-    // const clickTag = (tag: string) => {
-    //     productsStore.fetchProducts(tag, 'product_tags');
-    // }
 
     return (
         <div className={styles.container}>
@@ -20,9 +13,15 @@ const Tags = observer(() => {
             <div className={styles.line}/>
             <ul className={styles.listBrand}>
                 {
-                    storeSettings.tagsList?.map((el, index) => {
-                        return (<li key={index} className={styles.brand} >
-                                    <Link href={`/tags/${el.name}`}>
+                    storeSettings.tagsList?.map((el) => {
+                        return (<li key={el._id} className={styles.brand} >
+                                    <Link 
+                                        href={{
+                                            pathname: `/tags/[tag]`,
+                                            query: { tag: el.name },
+                                        }}
+                                        shallow
+                                    >
                                         {el.name}
                                     </Link>
                                 </li>)

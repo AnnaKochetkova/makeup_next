@@ -1,41 +1,20 @@
 import { observer } from "mobx-react-lite";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import Loading from "../../components/loading";
 import ProductCard from "../../components/productCard";
 import store, { useStoreProduct } from "../../store/productsStore";
 import storeSettings from "../../store/settingsStore";
 import styles from '../../styles/categories.module.css';
-import api from "../../utils/api";
 import client_api from "../../utils/client_api";
 import { factoryProduct } from "../../utils/factoryProduct";
-import { IProduct, ISettings } from "../../utils/types";
 import useWrapperStore from "../../utils/useWrapperStore";
 import { mainGetServerSideProps } from "../_app";
-
-// const useFirstRender = (cb, reCb) => {
-//     const count = useRef(true);
-//     useEffect(() => {
-//         if (count.current) {
-//             cb();
-//             count.current = false;
-//         }
-//         return () => {
-//             if (count.current = false) {
-//                 reCb()
-//             }
-//         }
-//     }, [cb, reCb])
-// }
 
 const Brand = observer(({brand}: any) => {
     const ustore = useStoreProduct();
     const router = useRouter()
     const { query } = router
-    const clickProduct = (product: IProduct) => {
-        // ustore.saveProduct(product);
-    }
 
     const taskStore = useCallback((item: any) => {
         store.fetchProductsByBrand(item._id);
@@ -46,18 +25,7 @@ const Brand = observer(({brand}: any) => {
     }, []);
 
     useWrapperStore('brand', brand.name, taskStore, taskFind);
-   
-    // useFirstRender(() => store.fetchProductsByBrand(brand._id), store.deleteProducts);
-    // useEffect(() => {
-    //     ustore.fetchProductsByBrand(brand._id)
-    //     console.log('useEffect fetch product mount');
-        
-             
-    //     return () => {
-    //         console.log('useEffect fetch product unmount');
-    //         ustore.deleteProducts();
-    //     }
-    // }, [ustore]);
+
     return (
         <div className={styles.container}>
             <h1 className={styles.header}>Brand: {query.brand}</h1>
@@ -70,7 +38,6 @@ const Brand = observer(({brand}: any) => {
                                 return (
                                     <ProductCard
                                         key={el._id}
-                                        onClick={()=>clickProduct(el)}
                                         brand={el.brand}
                                         name={el.name} 
                                         category={el.category} 

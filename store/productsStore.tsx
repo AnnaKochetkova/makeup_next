@@ -28,13 +28,13 @@ class ProductsStore {
             fetchProduct: action,
             saveProduct: action,
             hydrate: action,
-            deleteProducts: action,
         });
         console.log('constructor product store');
         
     }
 
     fetchProductsByBrand = async (brand: string) => {
+        this.loading = true;
         console.log('fetchProductsByBrand', this);
         const result = (await client_api.productByBrand(brand)).map(el => factoryProduct(el));
         runInAction(() => {
@@ -45,6 +45,7 @@ class ProductsStore {
     }
 
     async fetchProductsByTag (tag: string) {
+        this.loading = true;
         const result = (await client_api.productByTag(tag)).map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
@@ -62,7 +63,8 @@ class ProductsStore {
     }
 
     async fetchProduct (id: string) {
-        const result = (await client_api.productById(id));
+        this.loading = true;
+        const result = (await client_api.productById(id)).map(el => factoryProduct(el));
         runInAction(() => {
             this.productInfo = result[0];
             this.loading = false;
@@ -84,10 +86,6 @@ class ProductsStore {
         if (data.productInfo) {
             this.productInfo = data.productInfo || null;
         }
-    }
-
-    deleteProducts = () => {
-        this.loading = true;
     }
 }
 

@@ -1,19 +1,13 @@
-import productsStore from '../store/productsStore';
 import styles from '../styles/product.module.css';
 import { useRouter } from 'next/router';
 import { IProduct } from '../utils/types';
 
-interface IProductProps extends IProduct{
-    onClick: ()=>void
-}
-
-const ProductCard = ({brand, name, price, image_link, product_colors, _id,category, onClick}: IProductProps) => {
+const ProductCard = ({brand, name, price, image_link, product_colors, _id,category}: IProduct) => {
 
     const router = useRouter();
 
     const click = () => {
-        onClick()
-        router.push(`/product/${_id}`);
+        router.push(`/product/${_id}`, undefined, { shallow: true });
     }    
     
     return (

@@ -1,18 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import { useEffect } from "react";
-import productsStore from "../store/productsStore";
 import storeSettings from "../store/settingsStore";
 import styles from '../styles/listpage.module.css';
-import api from "../utils/api";
 import { mainGetServerSideProps } from "./_app";
 
 const Brands = observer(() => {
-
-    // const clickBrand = (brand: string) => {
-    //     productsStore.fetchProducts(brand, 'brand');
-    // }
     
     return (
         <div className={styles.container}>
@@ -21,9 +14,15 @@ const Brands = observer(() => {
             <ul className={styles.listBrand}>
                 {
                     
-                    storeSettings.brands?.map((el, index) => {
-                            return (<li key={index} className={styles.brand} >
-                                    <Link href={`/brands/${el.name}`}>
+                    storeSettings.brands?.map((el) => {
+                            return (<li key={el._id} className={styles.brand} >
+                                    <Link 
+                                        href={{
+                                            pathname: `/brands/[brand]`,
+                                            query: { brand: el.name },
+                                        }}
+                                        shallow
+                                    >
                                         <a>{el.name}</a>
                                     </Link>
                                     </li>)
@@ -39,6 +38,8 @@ const Brands = observer(() => {
 export default Brands;
 
 export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
+    console.log('brand');
+    
     const mainProps = await mainGetServerSideProps();
     return { props: {...mainProps } }
 }

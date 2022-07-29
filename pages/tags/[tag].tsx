@@ -1,26 +1,19 @@
 import { observer } from "mobx-react-lite";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import Loading from "../../components/loading";
 import ProductCard from "../../components/productCard";
 import store from "../../store/productsStore";
 import storeSettings from "../../store/settingsStore";
 import styles from '../../styles/categories.module.css';
-import api from "../../utils/api";
 import client_api from "../../utils/client_api";
 import { factoryProduct } from "../../utils/factoryProduct";
-import { IProduct } from "../../utils/types";
 import useWrapperStore from "../../utils/useWrapperStore";
 import { mainGetServerSideProps } from "../_app";
 
 const Tag = observer(({tag}: any) => {
     const router = useRouter()
     const { query } = router
-
-    const clickProduct = (product: IProduct) => {
-        // store.saveProduct(product);
-    }
 
     const taskStore = useCallback((item: any) => {
         store.fetchProductsByTag(item._id);
@@ -31,14 +24,6 @@ const Tag = observer(({tag}: any) => {
     }, []);
 
     useWrapperStore('tag', tag.name, taskStore, taskFind);
-
-    // useEffect(() => {
-    //     store.fetchProductsByTag(tag._id)
-
-    //     return () => {
-    //         store.deleteProducts();
-    //     }
-    // }, [tag]);
 
     return (
         <div className={styles.container}>
@@ -52,7 +37,6 @@ const Tag = observer(({tag}: any) => {
                                 return (
                                     <ProductCard
                                         key={el._id}
-                                        onClick={()=>clickProduct(el)}
                                         brand={el.brand}
                                         name={el.name} 
                                         category={el.category} 
