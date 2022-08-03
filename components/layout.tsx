@@ -1,23 +1,19 @@
 import styles from '../styles/Home.module.css';
-import productsStore from '../store/productsStore';
 import Link from 'next/link';
+import storeSettings from '../store/settingsStore';
+import { observer } from 'mobx-react-lite';
 
 interface LayoutProps {
     children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
-    const categories: string[] = ['blush', 'bronzer', 'eyebrow', 'eyeliner', 'eyeshadow', 'foundation', 'lip_liner', 'lipstick', 'mascara', 'nail_polish'];
-
-    const clickBrand = (categories: string) => {
-        productsStore.fetchProducts(categories, 'product_type');
-    }
-
+const Layout = observer(({ children }: LayoutProps) => {
+    
     return (
         <div className={styles.containerLayout}>
             <header className={styles.mainHeader}>
                 <div className={styles.header}>
-                    <Link href='/'>
+                    <Link href='/' shallow>
                         <a className={styles.linkHeader}>Make up</a>
                     </Link>
                 </div>
@@ -25,11 +21,17 @@ const Layout = ({ children }: LayoutProps) => {
                     <div className={styles.navbar}>Categories
                         <ul className={styles.navbarMenu}>
                             {
-                                categories.map((el, index) => {
-                                    return (<li key={index} onClick={()=>clickBrand(el)} className={styles.menu}>
-                                                <Link  href={`/${el}`} >
+                                storeSettings.productType?.map((el) => {
+                                    return (<li key={el._id} className={styles.menu}>
+                                                <Link 
+                                                      href={{
+                                                        pathname: `/[categories]`,
+                                                        query: { categories: el.name },
+                                                      }}
+                                                      shallow
+                                                >
                                                     <a className={styles.link}>
-                                                        {el}
+                                                        {el.name}
                                                     </a>
                                                 </Link>
                                             </li>)
@@ -38,14 +40,14 @@ const Layout = ({ children }: LayoutProps) => {
                         </ul>
                     </div>
                     <div className={styles.navbar}>
-                        <Link  href={`/brands`} >
+                        <Link  href={`/brands`} shallow>
                             <a className={styles.navbarLink}> 
                                 Brands
                             </a>
                         </Link>
                     </div>
                     <div className={styles.navbar}>
-                        <Link  href={`/tags`} >
+                        <Link  href={`/tags`} shallow>
                             <a className={styles.navbarLink}>
                                 Tags
                             </a>    
@@ -56,6 +58,9 @@ const Layout = ({ children }: LayoutProps) => {
             {children}
         </div>
     )
-}
+})
+
+
 
 export default Layout;
+

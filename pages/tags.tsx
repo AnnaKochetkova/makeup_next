@@ -1,15 +1,11 @@
+import { observer } from 'mobx-react-lite';
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import productsStore from '../store/productsStore';
+import storeSettings from '../store/settingsStore';
 import styles from '../styles/listpage.module.css';
+import { mainGetServerSideProps } from './_app';
 
-const Tags = () => {
-    const tags: string[] = ['Canadian', 'CertClean', 'Chemical Free', 'Dairy Free', 'EWG Verified', 'EcoCert', 'Fair Trade', 'Gluten Free',
-    'Hypoallergenic', 'Natural', 'No Talc', 'Non-GMO', 'Organic', 'Peanut Free Product', 'Sugar Free', 'USDA Organic', 'Vegan',
-    'alcohol free', 'cruelty free', 'oil free', 'purpicks', 'silicone free', 'water free'];
-
-    const clickTag = (tag: string) => {
-        productsStore.fetchProducts(tag, 'product_tags');
-    }
+const Tags = observer(() => {
 
     return (
         <div className={styles.container}>
@@ -17,10 +13,16 @@ const Tags = () => {
             <div className={styles.line}/>
             <ul className={styles.listBrand}>
                 {
-                    tags.map((el, index) => {
-                        return (<li key={index} className={styles.brand} onClick={()=>clickTag(el)}>
-                                    <Link href={`/tags/${el}`}>
-                                        {el}
+                    storeSettings.tagsList?.map((el) => {
+                        return (<li key={el._id} className={styles.brand} >
+                                    <Link 
+                                        href={{
+                                            pathname: `/tags/[tag]`,
+                                            query: { tag: el.name },
+                                        }}
+                                        shallow
+                                    >
+                                        {el.name}
                                     </Link>
                                 </li>)
                     })
@@ -29,6 +31,11 @@ const Tags = () => {
             </ul>
         </div>
     )
-}
+})
 
 export default Tags;
+
+export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
+    const mainProps = await mainGetServerSideProps();
+    return { props: {...mainProps } }
+}

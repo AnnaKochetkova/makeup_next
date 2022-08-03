@@ -59,6 +59,25 @@
 
 .descriptionText{
     line-height:1.5em;
+    max-height: 120px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #1d1d1d #d1d1d1;
+}
+
+.descriptionText::-webkit-scrollbar{
+    width: 10px;
+}
+
+.descriptionText::-webkit-scrollbar-track{
+    background: #d1d1d1;
+    border-radius: 20px;
+}
+
+.descriptionText::-webkit-scrollbar-thumb{
+    background-color: #1d1d1d;
+    border-radius: 20px;
+    border: 1px solid #e4e4e4;
 }
 
 .colors{

@@ -1,92 +1,114 @@
-import { runInAction, makeAutoObservable} from "mobx";
+import { action, runInAction, makeObservable, observable} from "mobx";
+import { useRef } from "react";
+import client_api from "../utils/client_api";
+import { factoryProduct } from "../utils/factoryProduct";
+import { IProduct } from "../utils/types";
+import { enableStaticRendering } from 'mobx-react-lite'
 
-export interface IColors{
-    hex_value: string,
-    colour_name?: string,
-}
-
-export interface IInfoProduct {
-    id: number;
-    api_featured_image: string,
-    brand: string,
-    category: string,
-    name: string,
-    price: string,
-    product_colors: IColors[],
-    description?: string,
-    tag_list?: string[],
-    product_link?: string,
-}
+enableStaticRendering(typeof window === 'undefined');
 
 interface IData{
-    products: IInfoProduct[],
+    products: IProduct[],
     loading: boolean,
-    productInfo: IInfoProduct
+    productInfo: IProduct,
+    counterProduct: number,
 }
 
 class ProductsStore {
-    products: IInfoProduct[] | null = [];
-    loading: boolean = true;
-    productInfo: IInfoProduct | null = null;
+    products: IProduct[] | null = [];
+    loading: boolean = false;
+    productInfo: IProduct | null = null;
+    counterProduct: number = 0;
     constructor() {
-        makeAutoObservable(this);
+        makeObservable(this, {
+            products: observable,
+            productInfo: observable,
+            loading: observable,
+            fetchProductsByBrand: action,
+            fetchProductsByTag: action,
+            fetchProductsByType: action,
+            fetchProduct: action,
+            saveProduct: action,
+            hydrate: action,
+        });
+        
     }
 
-    async fetchProducts (type: string | string[] | undefined, query: string) {
-        const url = `http://makeup-api.herokuapp.com/api/v1/products.json?${query}=${type}`;
-        const res = await fetch(url);
-        const result = await res.json();
+    fetchProductsByBrand = async (brand: string, page?: number) => {
+        this.loading = true;
+        const [product, {counter}] = await client_api.productByBrand(brand, (page || 0) * 12 );
+        const result = product.map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
+            this.counterProduct = Number(counter)
+            this.loading = false;
+        })
+
+    }
+
+    async fetchProductsByTag (tag: string, page?: number) {
+        this.loading = true;
+        const [product, {counter}] = await client_api.productByTag(tag, (page || 0) * 12 );
+        const result = product.map(el => factoryProduct(el));
+        runInAction(() => {
+            this.products = result;
+            this.counterProduct = Number(counter)
             this.loading = false;
         })
     }
 
-    saveProduct (product: IInfoProduct) {
-        this.productInfo = product;
+    async fetchProductsByType (type: string, page?: number) {
+        this.loading = true;
+        const [product, {counter}] = await client_api.productByProductType(type, (page || 0) * 12 );
+        const result = product.map(el => factoryProduct(el));
+        runInAction(() => {
+            this.products = result;
+            this.counterProduct = Number(counter)
+            this.loading = false;
+        })
     }
 
-    async updateProduct (id: string | string[] | undefined) {
-        const url = `http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
-        const res = await fetch(url);
-        const result = await res.json();
+    async fetchProduct (id: string) {
+        this.loading = true;
+        const result = factoryProduct(await client_api.productById(id));
         runInAction(() => {
             this.productInfo = result;
             this.loading = false;
         })
     }
 
-    hydrate (data: Partial<IData> | null) {
-        console.log(data, 'data hydrate');
-        
-        if(!data) return;
-        this.products = data.products || null; //data.products !== null ? data.products : null;
-        this.loading = !!data.loading;
-        this.productInfo = data.productInfo || null; //data.productInfo !== null ? data.productInfo : null;
-        console.log(this, 'this hydrate');
-        
+    saveProduct (product: IProduct) {
+        this.productInfo = product;
     }
 
-    deleteProducts() {
-        // this.products = [];
-        // this.productsBrand = [];
-        // this.hydrate({loading: true})
-        this.loading = true;
+    hydrate (data: Partial<IData> | null) {
+        if(!data) return;
+        if (data.products) {
+          this.products = data.products || null;
+        }
+        if (!!data.loading) {
+            this.loading = !!data.loading;
+        }
+        if (data.productInfo) {
+            this.productInfo = data.productInfo || null;
+        }
+        if (data.counterProduct) {
+            this.counterProduct = data.counterProduct || 0;
+        }
     }
 }
 
 const store = new ProductsStore;
 
+export const useStoreProduct = () => {
+    const refStore = useRef(store);
+    return refStore.current;
+}
+
 
 export function initializeStore(initialData = null) {
-    // const _store = new ProductsStore()
-  
-    // If your page has Next.js data fetching methods that use a Mobx store, it will
-    // get hydrated here, check `pages/ssg.js` and `pages/ssr.js` for more details
-    if (initialData) {
+    if (initialData !== null && initialData !== undefined) {
       store.hydrate(initialData)
     }
-    // For SSG and SSR always create a new store
-    
-  }
+}
 export default store;
