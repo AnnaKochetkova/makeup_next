@@ -1,7 +1,8 @@
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Loading from "../../components/loading";
+import Pagination from "../../components/pagination";
 import ProductCard from "../../components/productCard";
 import store from "../../store/productsStore";
 import storeSettings from "../../store/settingsStore";
@@ -13,7 +14,8 @@ import { mainGetServerSideProps } from "../_app";
 
 const Tag = observer(({tag}: any) => {
     const router = useRouter()
-    const { query } = router
+    const { query } = router;
+    const [currentPage, setCurrentPage] = useState(0);
 
     const taskStore = useCallback((item: any) => {
         store.fetchProductsByTag(item._id);
@@ -23,11 +25,31 @@ const Tag = observer(({tag}: any) => {
         return  storeSettings.tagsList?.find(el => el.name === name);
     }, []);
 
-    useWrapperStore('tag', tag.name, taskStore, taskFind);
+    const onPage = useCallback((page: number) => {
+        setCurrentPage(page);
+        const currentTag = taskFind(tag);
+        
+        if(currentTag){
+            store.fetchProductsByTag(currentTag?._id, page);
+        }
+        
+    }, [])
+
+    useWrapperStore('tag', tag, taskStore, taskFind);
+
+    useEffect(() => {
+        if(query.page !== undefined){
+            setCurrentPage(Number(query.page) - 1);
+            const currentTag = taskFind(tag);
+            if(currentTag){
+                store.fetchProductsByTag(currentTag?._id, (Number(query.page) - 1));
+            }
+        }
+    }, [])
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.header}>Tag: {query.tag}</h1>
+            <h1 className={styles.header}>Tag: {query.tag} Найдено: {store.counterProduct}</h1>
             <div className={styles.line} />
             {
                 store.loading ? <Loading /> : (
@@ -52,16 +74,18 @@ const Tag = observer(({tag}: any) => {
                     </div>
                 )
             }
+            <Pagination counter={store.counterProduct} currentPage={currentPage} onPage={onPage}/>
         </div>
     )
 })
 
 export  const getServerSideProps = async ({ query }: any) =>  {
     const mainProps = await mainGetServerSideProps();
-    const currentTag = await client_api.tagByName(query.tag)
-    if(currentTag.length === 1){
-        const result = (await client_api.productByTag(currentTag[0]._id)).map(el => factoryProduct(el))
-        return { props: {...mainProps, tag: currentTag[0], products: result} }
+    const currentTag = mainProps.tagsList.find(el => el.name === query.tag);
+    if(currentTag){
+        const [product, {counter}] = (await client_api.productByTag(currentTag._id));
+        const result = product.map(el => factoryProduct(el));
+        return { props: {...mainProps, tag: currentTag.name, products: result, counterProduct: Number(counter)} }
     }
     return {props: {}}
 }

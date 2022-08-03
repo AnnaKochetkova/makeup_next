@@ -13,7 +13,6 @@ const Brands = observer(() => {
             <div className={styles.line}/>
             <ul className={styles.listBrand}>
                 {
-                    
                     storeSettings.brands?.map((el) => {
                             return (<li key={el._id} className={styles.brand} >
                                     <Link 
@@ -27,7 +26,6 @@ const Brands = observer(() => {
                                     </Link>
                                     </li>)
                     })
-                    
                 }
                 
             </ul>
@@ -38,7 +36,6 @@ const Brands = observer(() => {
 export default Brands;
 
 export  const getServerSideProps: GetServerSideProps = async ({ query }) =>  {
-    console.log('brand');
     
     const mainProps = await mainGetServerSideProps();
     return { props: {...mainProps } }

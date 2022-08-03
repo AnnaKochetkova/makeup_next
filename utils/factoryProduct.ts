@@ -9,8 +9,8 @@ export const factoryProduct = (prod: IProduct): IProductRequest => {
         name: prod.name,
         price: prod.price,
         product_colors: prod.product_colors ? prod.product_colors : [],
-        description: prod.description && prod.description !== "" ? prod.description: "-",
-        tag_list:  prod.tag_list,
+        description: prod.description && prod.description !== "" ? prod.description: "No description",
+        tag_list:  prod.tag_list ? prod.tag_list : [],
         product_link: prod.product_link && prod.product_link !== "" ? prod.product_link: "-",
     } ;
 }

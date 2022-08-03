@@ -10,13 +10,15 @@ enableStaticRendering(typeof window === 'undefined');
 interface IData{
     products: IProduct[],
     loading: boolean,
-    productInfo: IProduct
+    productInfo: IProduct,
+    counterProduct: number,
 }
 
 class ProductsStore {
     products: IProduct[] | null = [];
     loading: boolean = false;
     productInfo: IProduct | null = null;
+    counterProduct: number = 0;
     constructor() {
         makeObservable(this, {
             products: observable,
@@ -29,44 +31,48 @@ class ProductsStore {
             saveProduct: action,
             hydrate: action,
         });
-        console.log('constructor product store');
         
     }
 
-    fetchProductsByBrand = async (brand: string) => {
+    fetchProductsByBrand = async (brand: string, page?: number) => {
         this.loading = true;
-        console.log('fetchProductsByBrand', this);
-        const result = (await client_api.productByBrand(brand)).map(el => factoryProduct(el));
+        const [product, {counter}] = await client_api.productByBrand(brand, (page || 0) * 12 );
+        const result = product.map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
+            this.counterProduct = Number(counter)
             this.loading = false;
         })
 
     }
 
-    async fetchProductsByTag (tag: string) {
+    async fetchProductsByTag (tag: string, page?: number) {
         this.loading = true;
-        const result = (await client_api.productByTag(tag)).map(el => factoryProduct(el));
+        const [product, {counter}] = await client_api.productByTag(tag, (page || 0) * 12 );
+        const result = product.map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
+            this.counterProduct = Number(counter)
             this.loading = false;
         })
     }
 
-    async fetchProductsByType (type: string) {
+    async fetchProductsByType (type: string, page?: number) {
         this.loading = true;
-        const result = (await client_api.productByProductType(type)).map(el => factoryProduct(el));
+        const [product, {counter}] = await client_api.productByProductType(type, (page || 0) * 12 );
+        const result = product.map(el => factoryProduct(el));
         runInAction(() => {
             this.products = result;
+            this.counterProduct = Number(counter)
             this.loading = false;
         })
     }
 
     async fetchProduct (id: string) {
         this.loading = true;
-        const result = (await client_api.productById(id)).map(el => factoryProduct(el));
+        const result = factoryProduct(await client_api.productById(id));
         runInAction(() => {
-            this.productInfo = result[0];
+            this.productInfo = result;
             this.loading = false;
         })
     }
@@ -85,6 +91,9 @@ class ProductsStore {
         }
         if (data.productInfo) {
             this.productInfo = data.productInfo || null;
+        }
+        if (data.counterProduct) {
+            this.counterProduct = data.counterProduct || 0;
         }
     }
 }

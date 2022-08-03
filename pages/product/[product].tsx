@@ -74,7 +74,7 @@ const Product = observer(({ productInfo }: any) => {
 })
 
 export  const getServerSideProps = async ({ query }: any) =>  {
-    const result = (await client_api.productById(query.product)).map(el => factoryProduct(el))        
-    return { props: { productInfo: result[0]} }
+    const result = factoryProduct(await client_api.productById(query.product))        
+    return { props: { productInfo: result} }
 }
 export default Product;

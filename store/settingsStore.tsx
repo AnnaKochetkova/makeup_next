@@ -1,4 +1,4 @@
-import { runInAction, makeAutoObservable} from "mobx";
+import { runInAction, makeObservable, observable} from "mobx";
 import { ISettings } from "../utils/types";
 
 
@@ -18,23 +18,40 @@ class SettingsStore {
     tagsList: ISettings[] | null = [];
 
     constructor() {
-        makeAutoObservable(this);
+        makeObservable(this, {
+            productType: observable,
+            categories: observable,
+            brands: observable,
+            tagsList: observable,
+        });
     }
 
     hydrate (data: Partial<IDataStore> | null) {
         
         if(!data) return;
         if (data.productType) {
-            this.productType = data.productType || null;
+            runInAction(() => {
+                this.productType = data.productType || null;
+            })
+            
         };
         if (data.categories) {
-            this.categories = data.categories || null;
+            runInAction(() => {
+                this.categories = data.categories || null;
+            })
+            
         };
         if (data.brands) {
-            this.brands = data.brands || null;
+            runInAction(() => {
+                this.brands = data.brands || null;
+            })
+            
         };
         if (data.tagsList) {
-            this.tagsList = data.tagsList || null;
+            runInAction(() => {
+                this.tagsList = data.tagsList || null;
+            })
+            
         };
     }
 }

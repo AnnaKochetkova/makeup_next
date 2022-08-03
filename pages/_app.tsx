@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     initializeStore(pageProps);
     initializeStoreSettings(pageProps);
+    
   }, [pageProps]);
   return (
       <Layout {...pageProps}>
